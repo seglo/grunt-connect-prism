@@ -15,10 +15,12 @@
     "email": "seglo@randonom.com",
     "url": "http://randonom.com/blog/"
   },
-  "licenses": [{
-    "type": "MIT",
-    "url": "https://github.com/seglo/grunt-connect-prism/blob/master/LICENSE-MIT"
-  }],
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/seglo/grunt-connect-prism/blob/master/LICENSE-MIT"
+    }
+  ],
   "bugs": {
     "url": "https://github.com/seglo/grunt-connect-prism/issues"
   },
@@ -33,8 +35,8 @@
     "grunt-contrib-clean": "~0.5.0"
   },
   "dependencies": {
-    "lodash": "~2.4.1",
-    "http-proxy": "~0.10.3"
+    "connect-prism": "^0.3.0",
+    "lodash": "~2.4.1"
   },
   "peerDependencies": {
     "grunt": "~0.4.1"

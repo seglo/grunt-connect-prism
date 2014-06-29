@@ -28,7 +28,7 @@ module.exports = function(grunt) {
           port: 9000,
           hostname: 'localhost',
           middleware: function(connect, options) {
-            return [require("./lib/events.js").handleRequest];
+            return [require('./middleware')];
           }
         }
       }
@@ -41,7 +41,8 @@ module.exports = function(grunt) {
         context: '/defaultContext',
         host: 'localhost',
         port: 8090,
-        https: false
+        https: false,
+        delay: 0
       },
       proxyTest: {
         options: {
@@ -50,47 +51,8 @@ module.exports = function(grunt) {
           context: '/proxyRequest',
           host: 'localhost',
           port: 8090,
-          https: false
-        }
-      },
-      recordTest: {
-        options: {
-          mode: 'record',
-          mocksPath: './mocks',
-          context: '/recordRequest',
-          host: 'localhost',
-          port: 8090,
-          https: false
-        }
-      },
-      jsonRecordTest: {
-        options: {
-          mode: 'record',
-          mocksPath: './mocks',
-          context: '/jsonRecordRequest',
-          host: 'localhost',
-          port: 8090,
-          https: false
-        }
-      },
-      mockTest: {
-        options: {
-          mode: 'mock',
-          mocksPath: './mocksToRead',
-          context: '/readRequest',
-          host: 'localhost',
-          port: 8090,
-          https: false
-        }
-      },
-      jsonMockTest: {
-        options: {
-          mode: 'mock',
-          mocksPath: './mocksToRead',
-          context: '/jsonMockRequest',
-          host: 'localhost',
-          port: 8090,
-          https: false
+          https: false,
+          delay: 2
         }
       },
       modeOverrideTest: {
@@ -103,9 +65,7 @@ module.exports = function(grunt) {
           https: false
         }
       },
-      inheritRootOptionsTest: {
-        options: {}
-      }
+      inheritRootOptionsTest: {}
     },
 
     mochaTest: {
@@ -135,10 +95,6 @@ module.exports = function(grunt) {
     'clean',
     'jshint',
     'prism:proxyTest',
-    'prism:recordTest',
-    'prism:jsonRecordTest',
-    'prism:mockTest',
-    'prism:jsonMockTest',
     'prism:modeOverrideTest:record',
     'prism:inheritRootOptionsTest',
     'connect:server',
