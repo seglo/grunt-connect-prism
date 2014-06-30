@@ -1,7 +1,7 @@
 {
   "name": "grunt-connect-prism",
-  "version": "0.2.2",
-  "description": "Record, playback, and proxy HTTP traffic.",
+  "version": "0.3.0",
+  "description": "Record, mock, and proxy HTTP traffic using the connect-prism middleware.",
   "main": "Gruntfile.js",
   "scripts": {
     "test": "grunt test"

@@ -1,6 +1,6 @@
 # grunt-connect-prism
 
-> Record, playback, and proxy HTTP traffic as middleware for the grunt-contrib-connect plugin.
+> Record, mock, and proxy HTTP traffic using the connect-prism middleware.
 
 ## Getting Started
 This plugin requires Grunt `~0.4.1` and the [grunt-contrib-connect](https://github.com/gruntjs/grunt-contrib-connect) `~0.7.1` plugin to already be installed.
@@ -17,6 +17,8 @@ One the plugin has been installed, it may be enabled inside your Gruntfile with 
 grunt.loadNpmTasks('grunt-connect-prism');
 ```
 ## Overview
+
+This grunt plugin is a wrapper around the [connect-prism](https://github.com/seglo/connect-prism) middleware.
 
 Prism is similar to the Ruby project [VCR](https://github.com/elcuervo/vcr.js).
 
@@ -71,7 +73,7 @@ This configuration is based on a modification to the connect middleware configur
       options: {
         middleware: function(connect) {
           return [
-            require('grunt-connect-prism/lib/events').handleRequest,
+            require('grunt-connect-prism/middleware'),
             connect.static('.tmp'),
             connect().use(
               '/bower_components',
@@ -110,8 +112,6 @@ You can add all the options in the root task options, in a target options, or a 
     }
 ```
 
-### Inheriting options
-
 ### Adding the prism task to the server task
 For the server task, add the prism task before the connect task.
 
@@ -121,15 +121,15 @@ If a target is not supplied then only the root prism options will be used to exe
 
 ```js
   grunt.registerTask('server', function (target, prismMode) {
-      grunt.task.run([
-          'clean:server',
-          'compass:server',
-          'prism:' + target + ':' + prismMode, /* see mode configuration for more details */
-          'livereload-start',
-          'connect:livereload',
-          'open',
-          'watch'
-      ]);
+    grunt.task.run([
+      'clean:server',
+      'compass:server',
+      'prism:' + target + ':' + prismMode, /* see mode configuration for more details */
+      'livereload-start',
+      'connect:livereload',
+      'open',
+      'watch'
+    ]);
   });
 ```
 
@@ -138,9 +138,10 @@ If a target is not supplied then only the root prism options will be used to exe
 #### mode:
 
 Type: `String`
+
 Default: `'proxy'`
 
-Values: `'record'`|`'read'`|`'proxy'`
+Values: `'record'` | `'read'` | `'proxy'`
 
 By setting a mode you create an explicit declaration that the context you're proxying will always be in the configured mode.  You can optionally override the mode of all the proxies for a target by passing in a 3rd parameter to the prism grunt task prism:[target]:[mode]
 
@@ -149,6 +150,7 @@ i.e. `grunt prism:server:mock`
 #### mocksPath:
 
 Type: `String`
+
 Default: `'./mocks'`
 
 Path to the root directory you want to record and mock responses.  If the directory does not exist then prism will attempt to create it.  If prism is executed with a target then recorded and mocked responses will be read from `'./mocks/targetName'`.  If no target is defined then only the default prism options will be used.
@@ -156,6 +158,7 @@ Path to the root directory you want to record and mock responses.  If the direct
 #### context:
 
 Type: `String`
+
 Default: n/a
 
 The starting context of your API that you are proxying.  This should be from the root of your webserver.  All requests that start with this context string will be used.
@@ -163,6 +166,7 @@ The starting context of your API that you are proxying.  This should be from the
 #### host:
 
 Type: `String`
+
 Default: n/a
 
 The server name or IP of the API that you are proxying.
@@ -170,6 +174,7 @@ The server name or IP of the API that you are proxying.
 #### port:
 
 Type: `Integer`
+
 Default: n/a
 
 The port number of the API that you are proxying.
@@ -177,6 +182,7 @@ The port number of the API that you are proxying.
 #### https:
 
 Type: `Boolean`
+
 Default: false
 
 The http scheme of the API you are proxying.  `true` === `https`, `false` === `http`
@@ -184,11 +190,28 @@ The http scheme of the API you are proxying.  `true` === `https`, `false` === `h
 #### changeOrigin:
 
 Type: `Boolean`
+
 Default: false
 
 Whether to change the origin on the request to the proxy, or keep the original origin.
 
-## TODO Wishlist
+#### delay:
+
+Type: `String` or `Integer`
+
+Default: 0
+
+Values: A number in milliseconds | `'auto'` | `'fast'` | `'slow'`
+
+This option allows you to simulate a delay when returning a mock response to the user.  Sometimes it's handy to simulate a delay because this will give you a better impression of how the user experience of your app will be when fully integrated with a backend server.
+
+You can configure an exact delay in milliseconds or one of the precreated options which returns a random delay in a certain range.
+
+* auto: 500 to 1750 ms
+* fast: 150 to 1000 ms
+* slow: 1500 to 3000 ms
+
+Thanks again to [Miloš Mošovský](https://github.com/MilosMosovsky) for this feature.
 
 ## Release History
 * 0.1.0 Initial release
@@ -196,3 +219,4 @@ Whether to change the origin on the request to the proxy, or keep the original o
 * 0.2.0 Support 'cassettes' by putting mocks into directories named after target.  Use http-proxy 0.10.4 to workaround around socket hangup issues in 1.1.4.
 * 0.2.1 Fixed record mode and tests so we don't release broken again!
 * 0.2.2 Support change origin.
+* 0.3.0 Use connect-prism core library.
