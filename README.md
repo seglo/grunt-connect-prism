@@ -30,7 +30,7 @@ Prism works by adding a custom connect middleware to the connect server provided
 
 ### Modes
 
-There are currently 3 supported modes of operation.
+There are currently 4 supported modes of operation.
 
 #### Record
 
@@ -57,9 +57,13 @@ The mock (read) mode will listen for requests to a certain endpoint.  When a req
 
 If a matching response is not found then prism will return a 404.  Prism will also create a mock during a 404.  This is useful when you want to mock API endpoints that may not exist yet.  To avoid having the subsequent request from returning the generated empty mock, the file has a .404 extension.  To use the mock, populate it with the appropriate values and remove the .404 extension.  This feature was contributed by [Miloš Mošovský](https://github.com/MilosMosovsky).
 
+#### Mock & Record
+
+As its name implies this operation will mock and record.  This mode will first attempt to load a mock if one exists.  If a mock does not exist it will then proxy the request and record the response instead of returning a 404.
+
 #### Proxy
 
-And finally, prism supports simple proxying in much the same way as the [grunt-connect-prism](https://github.com/drewzboto/grunt-connect-proxy) plugin works.  In fact, this plugin is heavily inspired by that project.  While in proxy mode, listening events for recording and mocking are disabled.
+And finally, prism supports simple proxying in much the same way as the [grunt-connect-proxy](https://github.com/drewzboto/grunt-connect-proxy) plugin works.  In fact, this plugin is heavily inspired by that project.  While in proxy mode, listening events for recording and mocking are disabled.
 
 ### Adapting the "connect" task
 
@@ -135,19 +139,19 @@ If a target is not supplied then only the root prism options will be used to exe
 
 ### Options
 
-#### mode:
+#### mode
 
 Type: `String`
 
 Default: `'proxy'`
 
-Values: `'record'` | `'read'` | `'proxy'`
+Values: `'record'` | `'mock'` | `'proxy'` | `'mockrecord'`
 
 By setting a mode you create an explicit declaration that the context you're proxying will always be in the configured mode.  You can optionally override the mode of all the proxies for a target by passing in a 3rd parameter to the prism grunt task prism:[target]:[mode]
 
 i.e. `grunt prism:server:mock`
 
-#### mocksPath:
+#### mocksPath
 
 Type: `String`
 
@@ -155,7 +159,7 @@ Default: `'./mocks'`
 
 Path to the root directory you want to record and mock responses.  If the directory does not exist then prism will attempt to create it.  If prism is executed with a target then recorded and mocked responses will be read from `'./mocks/targetName'`.  If no target is defined then only the default prism options will be used.
 
-#### context:
+#### context
 
 Type: `String`
 
@@ -163,7 +167,7 @@ Default: n/a
 
 The starting context of your API that you are proxying.  This should be from the root of your webserver.  All requests that start with this context string will be used.
 
-#### host:
+#### host
 
 Type: `String`
 
@@ -171,7 +175,7 @@ Default: n/a
 
 The server name or IP of the API that you are proxying.
 
-#### port:
+#### port
 
 Type: `Integer`
 
@@ -179,7 +183,7 @@ Default: n/a
 
 The port number of the API that you are proxying.
 
-#### https:
+#### https
 
 Type: `Boolean`
 
@@ -187,7 +191,7 @@ Default: false
 
 The http scheme of the API you are proxying.  `true` === `https`, `false` === `http`
 
-#### changeOrigin:
+#### changeOrigin
 
 Type: `Boolean`
 
@@ -195,13 +199,15 @@ Default: false
 
 Whether to change the origin on the request to the proxy, or keep the original origin.
 
-#### delay:
+#### delay
 
 Type: `String` or `Integer`
 
 Default: 0
 
 Values: A number in milliseconds | `'auto'` | `'fast'` | `'slow'`
+
+Delay only works `'mock'` mode.
 
 This option allows you to simulate a delay when returning a mock response to the user.  Sometimes it's handy to simulate a delay because this will give you a better impression of how the user experience of your app will be when fully integrated with a backend server.
 
@@ -212,6 +218,21 @@ You can configure an exact delay in milliseconds or one of the precreated option
 * slow: 1500 to 3000 ms
 
 Thanks again to [Miloš Mošovský](https://github.com/MilosMosovsky) for this feature.
+
+#### rewrite
+
+Type: `Object`
+
+Default: `{}`
+
+Add rewrite rules that prism will apply to all requests.  This functionality was copied from [grunt-connect-proxy and works the exact same way](https://github.com/drewzboto/grunt-connect-proxy#optionsrewrite).  You can configure a list of rewrite rules with an object.
+
+```js
+  {
+    '^/removingcontext': '',
+    '^/changingcontext': '/anothercontext'
+  }
+```
 
 ## Release History
 * 0.1.0 Initial release
