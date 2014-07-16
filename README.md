@@ -207,7 +207,7 @@ Default: 0
 
 Values: A number in milliseconds | `'auto'` | `'fast'` | `'slow'`
 
-Delay only works `'mock'` mode.
+Delay will work with all modes.
 
 This option allows you to simulate a delay when returning a mock response to the user.  Sometimes it's handy to simulate a delay because this will give you a better impression of how the user experience of your app will be when fully integrated with a backend server.
 
@@ -241,3 +241,4 @@ Add rewrite rules that prism will apply to all requests.  This functionality was
 * 0.2.1 Fixed record mode and tests so we don't release broken again!
 * 0.2.2 Support change origin.
 * 0.3.0 Use connect-prism core library.
+* 0.4.1 Upgrade to connect-prism 0.4.1
