@@ -35,7 +35,7 @@
     "grunt-contrib-clean": "~0.5.0"
   },
   "dependencies": {
-    "connect-prism": "^0.4.1",
+    "connect-prism": "^0.4.2",
     "lodash": "~2.4.1"
   },
   "peerDependencies": {
