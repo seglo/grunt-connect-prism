@@ -241,4 +241,5 @@ Add rewrite rules that prism will apply to all requests.  This functionality was
 * 0.2.1 Fixed record mode and tests so we don't release broken again!
 * 0.2.2 Support change origin.
 * 0.3.0 Use connect-prism core library.
-* 0.4.1 Upgrade to connect-prism 0.4.1
+* 0.4.1 Upgrade to connect-prism 0.4.1.
+* 0.4.2 Upgrade to connect-prism 0.4.2.
