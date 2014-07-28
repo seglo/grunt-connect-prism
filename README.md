@@ -38,6 +38,8 @@ The record mode will allow you to both record and proxy all HTTP traffic for a c
 
 To make mocks more readable, responses with a content-type of `json` or `javascript` will have their data stringified as an object.  If the content-type is anything other than json or if stringification fails then it falls back to a string.
 
+If the server returns a compressed response (gzip or deflate are supported), then prism will decompress the payload when recording the response.
+
 Example mock generated:
 
 ```javascript
@@ -243,3 +245,4 @@ Add rewrite rules that prism will apply to all requests.  This functionality was
 * 0.3.0 Use connect-prism core library.
 * 0.4.1 Upgrade to connect-prism 0.4.1.
 * 0.4.2 Upgrade to connect-prism 0.4.2.
+* 0.5.0 Upgrade to connect-prism 0.5.0.
