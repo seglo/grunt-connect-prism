@@ -99,7 +99,7 @@ In your project's Gruntfile, add a section named `prism`.
 
 ### Adding prism configuration.
 
-You can add all the options in the root task options, in a target options, or a mix of both (where the target options will inherit from the root options).
+You can add all the options in the root task options, in a target options, or a mix of both (where the target options will inherit from the root options). One thing to note: you need **at least** one configuration (ie server below) outside of the stock configuration for prism to work.
 
 ```js
   prism: {
