@@ -7,18 +7,18 @@ var path = require('path');
 var _ = require('lodash');
 var assert = require('assert');
 
-var proxies = require('connect-prism/lib/proxies');
+var manager = require('connect-prism').manager;
 
 var requestTimeout = 5000; // 5 seconds
 
 describe('Prism', function() {
   describe('task initialization', function() {
     it('should have initialized 3 proxies', function() {
-      assert.equal(3, proxies.proxies().length);
+      assert.equal(3, manager.prisms().length);
     });
 
     it('request options should be correctly mapped', function() {
-      var proxy = proxies.getProxy('/proxyRequest');
+      var proxy = manager.get('/proxyRequest');
 
       assert.equal(_.isUndefined(proxy), false);
       assert.equal(proxy.config.mode, 'proxy');
@@ -31,14 +31,14 @@ describe('Prism', function() {
     });
 
     it('mode can be overridden', function() {
-      var proxy = proxies.getProxy('/proxyOverrideRequest');
+      var proxy = manager.get('/proxyOverrideRequest');
 
       assert.equal(_.isUndefined(proxy), false);
       assert.equal(proxy.config.mode, 'record');
     });
 
     it('can inherit config from root task options', function() {
-      var proxy = proxies.getProxy('/defaultContext');
+      var proxy = manager.get('/defaultContext');
 
       assert.equal(_.isUndefined(proxy), false);
       assert.equal(proxy.config.mode, 'proxy');

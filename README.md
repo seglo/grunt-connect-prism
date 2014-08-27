@@ -236,13 +236,50 @@ Add rewrite rules that prism will apply to all requests.  This functionality was
   }
 ```
 
+#### hashFullRequest
+
+Type: `Boolean`
+
+Default: `false`
+
+Use the request body in conjunction with the request URL in order to generate a unique hash for the serialized response.  This is useful when you want to record responses for requests with distinct request bodies.
+
+i.e.) Require two different responses for a POST a request with a payload in the request body.
+
+Thanks to [Matt Philips](https://github.com/mattp-) for requesting and helping get this feature implemented.
+
+#### mockFilenameCallback
+
+Type: `Function`
+
+Default: `false` (will builtin mock filename generator function)
+
+Use your own strategy to generate and read mock response filenames.  This function accepts a function that takes 2 parameters:
+
+1. The prism config associated with this request context.
+2. The request object.
+
+i.e.) Generate a filename based on the SHA1 hash of the request URL.
+
+```js
+  function(config, req) {
+    var crypto = require('crypto');
+    var path = require('path');
+
+    var shasum = crypto.createHash('sha1');
+    shasum.update(req.url);
+    return shasum.digest('hex');
+  }
+```
+
 ## Release History
-* 0.1.0 Initial release
-* 0.1.1 Stop recording all response headers.  Only capture content-type.
-* 0.2.0 Support 'cassettes' by putting mocks into directories named after target.  Use http-proxy 0.10.4 to workaround around socket hangup issues in 1.1.4.
-* 0.2.1 Fixed record mode and tests so we don't release broken again!
-* 0.2.2 Support change origin.
-* 0.3.0 Use connect-prism core library.
-* 0.4.1 Upgrade to connect-prism 0.4.1.
-* 0.4.2 Upgrade to connect-prism 0.4.2.
+* 0.6.0 Upgrade to connect-prism 0.6.0.  Fix spec to use PrismManager.
 * 0.5.0 Upgrade to connect-prism 0.5.0.
+* 0.4.2 Upgrade to connect-prism 0.4.2.
+* 0.4.1 Upgrade to connect-prism 0.4.1.
+* 0.3.0 Use connect-prism core library.
+* 0.2.2 Support change origin.
+* 0.2.1 Fixed record mode and tests so we don't release broken again!
+* 0.2.0 Support 'cassettes' by putting mocks into directories named after target.  Use http-proxy 0.10.4 to workaround around socket hangup issues in 1.1.4.
+* 0.1.1 Stop recording all response headers.  Only capture content-type.
+* 0.1.0 Initial release
