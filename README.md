@@ -272,7 +272,16 @@ i.e.) Generate a filename based on the SHA1 hash of the request URL.
   }
 ```
 
+#### ignoreParameters
+
+Type: `Boolean` or [] of String or Regular expression
+
+Default: `false`
+
+This will filter parameters out of both the saved requestUrl and the hash used in the default file generation algorithm. This allows users to replay requests which use for example today's date or a random number as query parameters.
+
 ## Release History
+* 0.7.0 Upgrade to connect-prism 0.7.0.  Fix legacy middleware call.
 * 0.6.0 Upgrade to connect-prism 0.6.0.  Fix spec to use PrismManager.
 * 0.5.0 Upgrade to connect-prism 0.5.0.
 * 0.4.2 Upgrade to connect-prism 0.4.2.
