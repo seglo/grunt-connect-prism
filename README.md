@@ -248,13 +248,43 @@ i.e.) Require two different responses for a POST a request with a payload in the
 
 Thanks to [Matt Philips](https://github.com/mattp-) for requesting and helping get this feature implemented.
 
-#### mockFilenameCallback
+#### mockFilenameGenerator
 
-Type: `Function`
+Type: `Function` | `String`
 
-Default: `false` (will builtin mock filename generator function)
+Default: `'default'`
 
-Use your own strategy to generate and read mock response filenames.  This function accepts a function that takes 2 parameters:
+Use one of the builtin or your own strategy to generate and read mock response filenames.  
+
+Builtin generators:
+
+##### default
+
+`'default'`
+
+Generates filenames strictly based on request URL and request body (when `hashFullRequest` is configured).  Generates a SHA1 hash.
+
+i.e.)
+
+```
+04d5d366d8e8dbea60bb9187f7610423a527ca24.json
+```
+
+##### humanReadable
+
+`'humanReadable'`
+
+Generates a somewhat readable filename based on the request URL.  The request URL will replace characters `/ ? < > \ : * | " \`.  A hash from the `'default'` generator is appended to the end of the scrubbed request URL.  The filename is truncated to 255 characters for maximum compatibility across filesystems.
+
+i.e.)
+
+```
+_is_this_url_really=that&readable=at&all_09b2ed55fb2b388fbe02c69e94bca5d86ff7247c.json
+```
+
+##### A Custom Function
+
+This function accepts a function that takes 2 parameters:
 
 1. The prism config associated with this request context.
 2. The request object.
@@ -262,14 +292,14 @@ Use your own strategy to generate and read mock response filenames.  This functi
 i.e.) Generate a filename based on the SHA1 hash of the request URL.
 
 ```js
-  function(config, req) {
-    var crypto = require('crypto');
-    var path = require('path');
+function(config, req) {
+  var crypto = require('crypto');
+  var path = require('path');
 
-    var shasum = crypto.createHash('sha1');
-    shasum.update(req.url);
-    return shasum.digest('hex');
-  }
+  var shasum = crypto.createHash('sha1');
+  shasum.update(req.url);
+  return shasum.digest('hex');
+}
 ```
 
 #### ignoreParameters
@@ -281,6 +311,7 @@ Default: `false`
 This will filter parameters out of both the saved requestUrl and the hash used in the default file generation algorithm. This allows users to replay requests which use for example today's date or a random number as query parameters.
 
 ## Release History
+* 0.7.1 Upgrade to connect-prism 0.7.1.
 * 0.7.0 Upgrade to connect-prism 0.7.0.  Fix legacy middleware call.
 * 0.6.0 Upgrade to connect-prism 0.6.0.  Fix spec to use PrismManager.
 * 0.5.0 Upgrade to connect-prism 0.5.0.
