@@ -1,5 +1,10 @@
 # grunt-connect-prism
 
+[![NPM version](https://badge.fury.io/js/grunt-connect-prism.svg)](http://badge.fury.io/js/grunt-connect-prism)
+[![Build Status](https://travis-ci.org/seglo/grunt-connect-prism.svg?branch=master)](https://travis-ci.org/seglo/grunt-connect-prism)
+[![Dependency Status](https://david-dm.org/seglo/grunt-connect-prism.svg)](https://david-dm.org/seglo/grunt-connect-prism)
+[![devDependency Status](https://david-dm.org/seglo/grunt-connect-prism/dev-status.svg)](https://david-dm.org/seglo/grunt-connect-prism#info=devDependencies)
+
 > Record, mock, and proxy HTTP traffic using the connect-prism middleware.
 
 ## Getting Started
