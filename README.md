@@ -316,6 +316,7 @@ Default: `false`
 This will filter parameters out of both the saved requestUrl and the hash used in the default file generation algorithm. This allows users to replay requests which use for example today's date or a random number as query parameters.
 
 ## Release History
+* 0.7.3 Upgrade to connect-prism 0.7.3.
 * 0.7.1 Upgrade to connect-prism 0.7.1.
 * 0.7.0 Upgrade to connect-prism 0.7.0.  Fix legacy middleware call.
 * 0.6.0 Upgrade to connect-prism 0.6.0.  Fix spec to use PrismManager.
