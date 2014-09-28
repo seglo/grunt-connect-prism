@@ -124,21 +124,23 @@ prism: {
 }
 ```
 
-### Adding the prism task to the server task
-For the server task, add the prism task before the connect task.
+### Running prism
+Typically you will want to run your prism task while you're running your development server, or while e2e tests are running.  There are several different ways to add prism tasks to the grunt task queue.
+
+Usage)
 
 `'prism[:target[:mode]]'`
 
 If `'prism'` is executed by itself then all prism targets will be created.
 
-If a target is supplied (i.e. 'prism:targetOne'`) then only that prism target instance will be created.
+If a target is supplied (i.e. `'prism:targetOne'`) then only that prism target instance will be created.
 
 If a target and mode are supplied (i.e. `'prism:targetOne:record'`) then only that prism target instance will be created and will be in the record mode.
 
-Basic example.
+Basic `grunt serve` example.
 
 ```js
-grunt.registerTask('serve', function (target, prismMode) {
+grunt.registerTask('serve', function () {
   grunt.task.run([
     'clean:server',
     'compass:server',
@@ -151,7 +153,7 @@ grunt.registerTask('serve', function (target, prismMode) {
 });
 ```
 
-Target and mode override example.
+Target and mode override example (i.e. `grunt serve:targetOne:record`).
 
 ```js
 grunt.registerTask('serve', function (target, prismMode) {
