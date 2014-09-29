@@ -34,40 +34,6 @@ module.exports = function(grunt) {
       }
     },
 
-    prism: {
-      options: {
-        mode: 'proxy',
-        mocksPath: './mocks',
-        context: '/defaultContext',
-        host: 'localhost',
-        port: 8090,
-        https: false,
-        delay: 0
-      },
-      proxyTest: {
-        options: {
-          mode: 'proxy',
-          mocksPath: './mocks',
-          context: '/proxyRequest',
-          host: 'localhost',
-          port: 8090,
-          https: false,
-          delay: 2
-        }
-      },
-      modeOverrideTest: {
-        options: {
-          mode: 'proxy',
-          mocksPath: './mocks',
-          context: '/proxyOverrideRequest',
-          host: 'localhost',
-          port: 8090,
-          https: false
-        }
-      },
-      inheritRootOptionsTest: {}
-    },
-
     mochaTest: {
       test: {
         options: {
@@ -94,9 +60,6 @@ module.exports = function(grunt) {
   grunt.registerTask('test', [
     'clean',
     'jshint',
-    'prism:proxyTest',
-    'prism:modeOverrideTest:record',
-    'prism:inheritRootOptionsTest',
     'connect:server',
     'mochaTest'
   ]);

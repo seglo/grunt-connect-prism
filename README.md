@@ -48,14 +48,14 @@ If the server returns a compressed response (gzip or deflate are supported), the
 Example mock generated:
 
 ```javascript
-  {
-    "requestUrl": "/api/ponies",
-    "contentType": "application/json",
-    "statusCode": 200,
-    "data": {
-      "text": "my little ponies"
-    }
+{
+  "requestUrl": "/api/ponies",
+  "contentType": "application/json",
+  "statusCode": 200,
+  "data": {
+    "text": "my little ponies"
   }
+}
 ```
 
 #### Mock
@@ -79,23 +79,23 @@ And finally, prism supports simple proxying in much the same way as the [grunt-c
 This configuration is based on a modification to the connect middleware configuration that the yeoman [angular-generator](https://github.com/yeoman/generator-angular) will create.
 
 ```js
-  connect: {
-    livereload: {
-      options: {
-        middleware: function(connect) {
-          return [
-            require('grunt-connect-prism/middleware'),
-            connect.static('.tmp'),
-            connect().use(
-              '/bower_components',
-              connect.static('./bower_components')
-            ),
-            connect.static(appConfig.app)
-          ];
-        }
+connect: {
+  livereload: {
+    options: {
+      middleware: function(connect) {
+        return [
+          require('grunt-connect-prism/middleware'),
+          connect.static('.tmp'),
+          connect().use(
+            '/bower_components',
+            connect.static('./bower_components')
+          ),
+          connect.static(appConfig.app)
+        ];
       }
     }
   }
+}
 ```
 
 ## Configuration 
@@ -104,44 +104,69 @@ In your project's Gruntfile, add a section named `prism`.
 
 ### Adding prism configuration.
 
-You can add all the options in the root task options, in a target options, or a mix of both (where the target options will inherit from the root options). One thing to note: you need **at least** one configuration (ie server below) outside of the stock configuration for prism to work.
+You can add all the options in the root task options, in a target options, or a mix of both (where the target options will inherit from the root options).  If only the root prism options are provided than a prism instance with the name 'default' will be created.
 
 ```js
-  prism: {
+prism: {
+  options: {
+    mocksPath: './mocks',
+    host: 'localhost',
+    port: 8090,
+    https: false,
+    changeOrigin: true
+  },
+  server: {
     options: {
-      mocksPath: './mocks',
-      host: 'localhost',
-      port: 8090,
-      https: false,
-      changeOrigin: true
-    },
-    server: {
-      options: {
-        mode: 'record',
-        context: '/api'
-      }
+      mode: 'record',
+      context: '/api'
     }
+  }
+}
 ```
 
-### Adding the prism task to the server task
-For the server task, add the prism task before the connect task.
+### Running prism
+Typically you will want to run your prism task while you're running your development server, or while e2e tests are running.  There are several different ways to add prism tasks to the grunt task queue.
 
-If a target is supplied then only that prism target instanced will be created.
+Usage)
 
-If a target is not supplied then only the root prism options will be used to execute a single prism instance.
+`'prism[:target[:mode]]'`
+
+If `'prism'` is executed by itself then all prism targets will be created.
+
+If a target is supplied (i.e. `'prism:targetOne'`) then only that prism target instance will be created.
+
+If a target and mode are supplied (i.e. `'prism:targetOne:record'`) then only that prism target instance will be created and will be in the record mode.
+
+Basic `grunt serve` example.
 
 ```js
-  grunt.registerTask('server', function (target, prismMode) {
-    grunt.task.run([
-      'clean:server',
-      'compass:server',
-      'prism:' + target + ':' + prismMode, /* see mode configuration for more details */
-      'livereload-start',
-      'connect:livereload',
-      'open',
-      'watch'
-    ]);
-  });
+grunt.registerTask('serve', function () {
+  grunt.task.run([
+    'clean:server',
+    'compass:server',
+    'prism',
+    'livereload-start',
+    'connect:livereload',
+    'open',
+    'watch'
+  ]);
+});
+```
+
+Target and mode override example (i.e. `grunt serve:targetOne:record`).
+
+```js
+grunt.registerTask('serve', function (target, prismMode) {
+  grunt.task.run([
+    'clean:server',
+    'compass:server',
+    'prism:' + target + ':' + prismMode, /* see mode configuration for more details */
+    'livereload-start',
+    'connect:livereload',
+    'open',
+    'watch'
+  ]);
+});
 ```
 
 ### Options
@@ -235,10 +260,10 @@ Default: `{}`
 Add rewrite rules that prism will apply to all requests.  This functionality was copied from [grunt-connect-proxy and works the exact same way](https://github.com/drewzboto/grunt-connect-proxy#optionsrewrite).  You can configure a list of rewrite rules with an object.
 
 ```js
-  {
-    '^/removingcontext': '',
-    '^/changingcontext': '/anothercontext'
-  }
+{
+  '^/removingcontext': '',
+  '^/changingcontext': '/anothercontext'
+}
 ```
 
 #### hashFullRequest
@@ -316,16 +341,22 @@ Default: `false`
 This will filter parameters out of both the saved requestUrl and the hash used in the default file generation algorithm. This allows users to replay requests which use for example today's date or a random number as query parameters.
 
 ## Release History
+* 0.7.4 Support 'default' instance.
+Re-factor tests.
 * 0.7.3 Upgrade to connect-prism 0.7.3.
 * 0.7.1 Upgrade to connect-prism 0.7.1.
-* 0.7.0 Upgrade to connect-prism 0.7.0.  Fix legacy middleware call.
-* 0.6.0 Upgrade to connect-prism 0.6.0.  Fix spec to use PrismManager.
+* 0.7.0 Upgrade to connect-prism 0.7.0.  
+Fix legacy middleware call.
+* 0.6.0 Upgrade to connect-prism 0.6.0.  
+Fix spec to use PrismManager.
 * 0.5.0 Upgrade to connect-prism 0.5.0.
 * 0.4.2 Upgrade to connect-prism 0.4.2.
 * 0.4.1 Upgrade to connect-prism 0.4.1.
 * 0.3.0 Use connect-prism core library.
 * 0.2.2 Support change origin.
 * 0.2.1 Fixed record mode and tests so we don't release broken again!
-* 0.2.0 Support 'cassettes' by putting mocks into directories named after target.  Use http-proxy 0.10.4 to workaround around socket hangup issues in 1.1.4.
-* 0.1.1 Stop recording all response headers.  Only capture content-type.
+* 0.2.0 Support 'cassettes' by putting mocks into directories named after target.  
+Use http-proxy 0.10.4 to workaround around socket hangup issues in 1.1.4.
+* 0.1.1 Stop recording all response headers.  
+Only capture content-type.
 * 0.1.0 Initial release
