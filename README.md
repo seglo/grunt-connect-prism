@@ -341,6 +341,8 @@ Default: `false`
 This will filter parameters out of both the saved requestUrl and the hash used in the default file generation algorithm. This allows users to replay requests which use for example today's date or a random number as query parameters.
 
 ## Release History
+* 0.7.6 Use connect-prism 0.7.5 to fix socket hang up issue by handling aborted requests appropriately ([issue #15](https://github.com/seglo/grunt-connect-prism/issues/15)).
+[Issue #527 from node-http-proxy project.](https://github.com/nodejitsu/node-http-proxy/issues/527)
 * 0.7.4 Support 'default' instance.
 Re-factor tests.
 * 0.7.3 Upgrade to connect-prism 0.7.3.

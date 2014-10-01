@@ -1,6 +1,6 @@
 {
   "name": "grunt-connect-prism",
-  "version": "0.7.5",
+  "version": "0.7.6",
   "description": "Record, mock, and proxy HTTP traffic using the connect-prism middleware.",
   "main": "Gruntfile.js",
   "scripts": {
@@ -35,7 +35,7 @@
     "grunt-mocha-test": "^0.11.0"
   },
   "dependencies": {
-    "connect-prism": "^0.7.4",
+    "connect-prism": "^0.7.5",
     "lodash": "^2.4.1"
   },
   "peerDependencies": {
