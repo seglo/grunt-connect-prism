@@ -106,14 +106,33 @@ In your project's Gruntfile, add a section named `prism`.
 
 You can add all the options in the root task options, in a target options, or a mix of both (where the target options will inherit from the root options).  If only the root prism options are provided than a prism instance with the name 'default' will be created.
 
+i.e)
+
 ```js
 prism: {
   options: {
-    mocksPath: './mocks',
+    mode: 'record',
     host: 'localhost',
     port: 8090,
-    https: false,
-    changeOrigin: true
+    context: '/api'
+  }
+}
+```
+
+#### Multiple targets
+
+You can create multiple prism targets in the standard convention of grunt configuration.  `grunt-connect-prism` will create a directory in the `mocksPath` directory named after the target. 
+
+i.e.)
+
+```js
+prism: {
+  options: {
+    host: 'localhost',
+    port: 8090,
+    https: true,
+    mocksPath: './stubs',
+    useApi: true
   },
   server: {
     options: {
@@ -171,174 +190,21 @@ grunt.registerTask('serve', function (target, prismMode) {
 
 ### Options
 
-#### mode
+Options pass through directly to `connect-prism`.  See [Options](https://github.com/seglo/connect-prism#options) section in `connect-prism`.
 
-Type: `String`
+### API features
 
-Default: `'proxy'`
-
-Values: `'record'` | `'mock'` | `'proxy'` | `'mockrecord'`
-
-By setting a mode you create an explicit declaration that the context you're proxying will always be in the configured mode.  You can optionally override the mode of all the proxies for a target by passing in a 3rd parameter to the prism grunt task prism:[target]:[mode]
-
-i.e. `grunt prism:server:mock`
-
-#### mocksPath
-
-Type: `String`
-
-Default: `'./mocks'`
-
-Path to the root directory you want to record and mock responses.  If the directory does not exist then prism will attempt to create it.  If prism is executed with a target then recorded and mocked responses will be read from `'./mocks/targetName'`.  If no target is defined then only the default prism options will be used.
-
-#### context
-
-Type: `String`
-
-Default: n/a
-
-The starting context of your API that you are proxying.  This should be from the root of your webserver.  All requests that start with this context string will be used.
-
-#### host
-
-Type: `String`
-
-Default: n/a
-
-The server name or IP of the API that you are proxying.
-
-#### port
-
-Type: `Integer`
-
-Default: n/a
-
-The port number of the API that you are proxying.
-
-#### https
-
-Type: `Boolean`
-
-Default: false
-
-The http scheme of the API you are proxying.  `true` === `https`, `false` === `http`
-
-#### changeOrigin
-
-Type: `Boolean`
-
-Default: false
-
-Whether to change the origin on the request to the proxy, or keep the original origin.
-
-#### delay
-
-Type: `String` or `Integer`
-
-Default: 0
-
-Values: A number in milliseconds | `'auto'` | `'fast'` | `'slow'`
-
-Delay will work with all modes.
-
-This option allows you to simulate a delay when returning a mock response to the user.  Sometimes it's handy to simulate a delay because this will give you a better impression of how the user experience of your app will be when fully integrated with a backend server.
-
-You can configure an exact delay in milliseconds or one of the precreated options which returns a random delay in a certain range.
-
-* auto: 500 to 1750 ms
-* fast: 150 to 1000 ms
-* slow: 1500 to 3000 ms
-
-Thanks again to [Miloš Mošovský](https://github.com/MilosMosovsky) for this feature.
-
-#### rewrite
-
-Type: `Object`
-
-Default: `{}`
-
-Add rewrite rules that prism will apply to all requests.  This functionality was copied from [grunt-connect-proxy and works the exact same way](https://github.com/drewzboto/grunt-connect-proxy#optionsrewrite).  You can configure a list of rewrite rules with an object.
+The API can be enabled in the root prism configuration.  The API is disabled by default.
 
 ```js
-{
-  '^/removingcontext': '',
-  '^/changingcontext': '/anothercontext'
+prism: {
+  options: {
+    useApi: true
+  }
 }
 ```
 
-#### hashFullRequest
-
-Type: `Boolean`
-
-Default: `false`
-
-Use the request body in conjunction with the request URL in order to generate a unique hash for the serialized response.  This is useful when you want to record responses for requests with distinct request bodies.
-
-i.e.) Require two different responses for a POST a request with a payload in the request body.
-
-Thanks to [Matt Philips](https://github.com/mattp-) for requesting and helping get this feature implemented.
-
-#### mockFilenameGenerator
-
-Type: `Function` | `String`
-
-Default: `'default'`
-
-Use one of the builtin or your own strategy to generate and read mock response filenames.  
-
-Builtin generators:
-
-##### default
-
-`'default'`
-
-Generates filenames strictly based on request URL and request body (when `hashFullRequest` is configured).  Generates a SHA1 hash.
-
-i.e.)
-
-```
-04d5d366d8e8dbea60bb9187f7610423a527ca24.json
-```
-
-##### humanReadable
-
-`'humanReadable'`
-
-Generates a somewhat readable filename based on the request URL.  The request URL will replace characters `/ ? < > \ : * | " \`.  A hash from the `'default'` generator is appended to the end of the scrubbed request URL.  The filename is truncated to 255 characters for maximum compatibility across filesystems.
-
-i.e.)
-
-```
-_is_this_url_really=that&readable=at&all_09b2ed55fb2b388fbe02c69e94bca5d86ff7247c.json
-```
-
-##### A Custom Function
-
-This function accepts a function that takes 2 parameters:
-
-1. The prism config associated with this request context.
-2. The request object.
-
-i.e.) Generate a filename based on the SHA1 hash of the request URL.
-
-```js
-function(config, req) {
-  var crypto = require('crypto');
-  var path = require('path');
-
-  var shasum = crypto.createHash('sha1');
-  shasum.update(req.url);
-  return shasum.digest('hex');
-}
-```
-
-#### ignoreParameters
-
-Type: `Boolean` or [] of String or Regular expression
-
-Default: `false`
-
-This will filter parameters out of both the saved requestUrl and the hash used in the default file generation algorithm. This allows users to replay requests which use for example today's date or a random number as query parameters.
+See the [API features](https://github.com/seglo/connect-prism#api-features) section in `connect-prism` for more details.
 
 ## Release History
 * 0.7.6 Use connect-prism 0.7.5 to fix socket hang up issue by handling aborted requests appropriately ([issue #15](https://github.com/seglo/grunt-connect-prism/issues/15)).

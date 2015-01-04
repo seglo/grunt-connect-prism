@@ -72,7 +72,6 @@ describe('Prism', function() {
       assert.equal(proxy.config.host, 'localhost');
       assert.equal(proxy.config.port, 8090);
       assert.equal(proxy.config.https, false);
-      assert.equal(proxy.config.changeOrigin, false);
     });
 
     it('mode can be overridden', function() {
@@ -92,7 +91,6 @@ describe('Prism', function() {
       assert.equal(proxy.config.host, 'localhost');
       assert.equal(proxy.config.port, 8090);
       assert.equal(proxy.config.https, false);
-      assert.equal(proxy.config.changeOrigin, false);
     });
   });
   describe('default task initialization', function() {
@@ -135,6 +133,33 @@ describe('Prism', function() {
       assert.equal(2, manager.prisms().length);
       assert.equal(_.isUndefined(manager.get('/targetOne')), false);
       assert.equal(_.isUndefined(manager.get('/targetTwo')), false);
+    });
+
+    it('should initialize api', function(done) {
+      grunt.config.set('prism', {
+        options: {
+          context: '/defaultContext',
+          host: 'localhost',
+          useApi: true
+        }
+      });
+      prism();
+
+      var req = http.request({
+        host: 'localhost',
+        path: '/_prism/version',
+        port: 9000
+      }, function(res) {
+        var data = '';
+        res.on('data', function(chunk) {
+          data += chunk;
+        });
+        res.on('end', function() {
+          assert.equal(data, require('../node_modules/connect-prism/package.json').version);
+          done();
+        });
+      });
+      req.end();
     });
   });
 });
