@@ -207,6 +207,7 @@ prism: {
 See the [API features](https://github.com/seglo/connect-prism#api-features) section in `connect-prism` for more details.
 
 ## Release History
+* 1.0.0 Use connect-prism 1.0.0.  Added API capabilities.
 * 0.7.6 Use connect-prism 0.7.5 to fix socket hang up issue by handling aborted requests appropriately ([issue #15](https://github.com/seglo/grunt-connect-prism/issues/15)).
 [Issue #527 from node-http-proxy project.](https://github.com/nodejitsu/node-http-proxy/issues/527)
 * 0.7.4 Support 'default' instance.
